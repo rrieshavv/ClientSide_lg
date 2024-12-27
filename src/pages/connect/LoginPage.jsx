@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState("Login");
+  const [loading, setLoading] = useState("Sign In");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,13 +16,13 @@ const LoginPage = () => {
 
     if (username.trim().length === 0 || password.trim().length === 0) {
       setError("Username and password are required.");
-      setLoading("Login");
+      setLoading("Sign In");
       return;
     }
 
     if (password.length < 8) {
       setError("Password must be 8 characters long.");
-      setLoading("Login");
+      setLoading("Sign In");
       return;
     }
 
@@ -51,7 +51,7 @@ const LoginPage = () => {
           {/* Content Section  */}
           <div className="bg-white p-6 sm:p-8 rounded w-full h-auto min-h-[300px]">
             <div className="text-center text-xl font-semibold mb-5">
-              <h3>Reset your password</h3>
+              <h3>Sign In to HrLog</h3>
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
