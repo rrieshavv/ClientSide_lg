@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { setToken } from "../providers/CookieHandler";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";

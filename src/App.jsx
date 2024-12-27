@@ -1,10 +1,11 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
 import ProtectedRoute from "./providers/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import { getToken } from "./providers/CookieHandler";
 import { ToastContainer } from "react-toastify";
+import LoginPage from "./pages/connect/LoginPage";
+import ForgetPasswordPage from "./pages/connect/ForgetPasswordPage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -12,7 +13,7 @@ function App() {
   const routes = [
     {
       path: "/login",
-      component: Login,
+      component: LoginPage,
       isPrivate: false,
     },
     {
@@ -20,6 +21,11 @@ function App() {
       component: Dashboard,
       isPrivate: true,
     },
+    {
+      path: '/forgot-password',
+      component: ForgetPasswordPage,
+      isPrivate: false
+    }
   ];
 
   return (
