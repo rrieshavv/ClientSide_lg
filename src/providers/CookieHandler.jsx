@@ -1,17 +1,15 @@
 import Cookies from "js-cookie";
-import { decryptData, encryptData } from "./Encryptor";
 
 // Set token and username in the cookie with encryption
-export const setToken = (token, username) => {
-  const data = {
-    token,
-    username,
-  };
+export const setToken = (token, sessionId) => {
+  Cookies.set("authToken", token, {
+    expires: 0.02, 
+    secure: true,
+    sameSite: "strict",
+  });
 
-  const encryptedData = encryptData(data);
-
-  Cookies.set("authToken", encryptedData, {
-    expires: 0.002, 
+  Cookies.set("session", sessionId, {
+    expires: 0.02, 
     secure: true,
     sameSite: "strict",
   });
@@ -20,7 +18,8 @@ export const setToken = (token, username) => {
 export const getToken = () => {
   const encryptedCookie = Cookies.get("authToken");
   if (encryptedCookie) {
-    return decryptData(encryptedCookie); 
+    // return decryptData(encryptedCookie); 
+    return encryptedCookie;
   }
   return null;
 };

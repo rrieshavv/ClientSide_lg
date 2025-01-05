@@ -2,9 +2,12 @@ import { useState } from "react";
 import logo from "../../assets/Logo.png";
 import { loginService } from "../../services/authService";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { setToken } from "../../providers/CookieHandler";
 
 const LoginPage = () => {
+  const Navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +32,9 @@ const LoginPage = () => {
     try {
       const response = await loginService(username, password);
       if (response.code === 0) {
-        toast.success("Logged in successfully");
+        setToken(response.data.token, response.data.sessionId);
+        toast.success("Logged in successfully.");
+        Navigate("/dashboard");
       } else {
         setError(response.message);
       }
