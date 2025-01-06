@@ -23,6 +23,7 @@ function App() {
       component: DashboardPage,
       isPrivate: true,
     },
+    
     {
       path: "/forgot-password",
       component: ForgetPasswordPage,
@@ -78,7 +79,7 @@ function App() {
 
         {/* Nested routes for the dashboard */}
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -86,7 +87,7 @@ function App() {
           }
         >
           <Route path="profile" element={<ProfilePage/>} />
-          <Route path="user" element={<UserManagementPage/>} />
+          <Route path="user/dashboard" element={<UserManagementPage/>} />
         </Route>
       </Routes>
     </>

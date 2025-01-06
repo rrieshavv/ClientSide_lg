@@ -26,4 +26,5 @@ export const getToken = () => {
 
 export const removeToken = () => {
   Cookies.remove("authToken");
+  Cookies.remove("session");
 };
