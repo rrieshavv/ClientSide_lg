@@ -7,7 +7,8 @@ import LoginPage from "./pages/connect/LoginPage";
 import ForgetPasswordPage from "./pages/connect/ForgetPasswordPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
-import UserManagementPage from "./pages/dashboard/UserManagementPage";
+import UserManagementPage from "./pages/user/UserManagementPage";
+import CreateUser from "./pages/user/CreateUser";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -88,6 +89,7 @@ function App() {
         >
           <Route path="profile" element={<ProfilePage/>} />
           <Route path="user/dashboard" element={<UserManagementPage/>} />
+          <Route path="user/create" element={<CreateUser/>}/>
         </Route>
       </Routes>
     </>
