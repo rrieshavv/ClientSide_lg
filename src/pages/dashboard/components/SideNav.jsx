@@ -62,7 +62,7 @@ const SideNav = () => {
   };
 
   return (
-    <aside className="w-64 bg-orange-100 p-4 min-h-[calc(100vh-64px)] flex flex-col gap-2">
+    <aside className="min-w-64 bg-orange-100 p-4 min-h-[calc(100vh-64px)] flex flex-col gap-2">
       {menuItems.map((item) => (
         <div key={item.menu_id}>
           {item.hasSubmenu ? (
