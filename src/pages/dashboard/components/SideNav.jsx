@@ -1,94 +1,129 @@
-import React, { useState } from 'react';
-import { ChevronDown, LogOut } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { removeToken } from '../../../providers/CookieHandler';
+import React, { useState } from "react";
+import { ChevronDown, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { getMenu, removeToken } from "../../../providers/CookieHandler";
 
 const SideNav = () => {
   const [openMenus, setOpenMenus] = useState({});
-
   const Navigate = useNavigate();
 
-  const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', hasSubmenu: false },
-    { name: 'Organization', path: '/organization', hasSubmenu: true },
-    { 
-      name: 'User Management', 
-      hasSubmenu: true,
-      submenu: [
-        { name: 'Dashboard', path: '/user/dashboard' },
-        { name: 'Roles', path: '/users/roles' }
-      ]
-    },
-    { name: 'Employee Wizard', path: '/employee', hasSubmenu: true },
-    { name: 'Time Tracking', path: '/time', hasSubmenu: true },
-    { name: 'Settings', path: '/settings', hasSubmenu: true }
-  ];
+  const menuItems = getMenu();
+  // Menu items as per the provided JSON format
+  // const menuItems = [
+  //   {
+  //     menu_id: 1,
+  //     menu_name: "Dashboard",
+  //     menu_logo: null,
+  //     menu_path: "/dashboard",
+  //     hasSubmenu: false,
+  //     subMenus: [
+  //       {
+  //         sub_menu_id: 0,
+  //         sub_menu_name: null,
+  //         sub_menu_logo: null,
+  //         sub_menu_path: null,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     menu_id: 2,
+  //     menu_name: "User Management",
+  //     menu_logo: null,
+  //     menu_path: null,
+  //     hasSubmenu: true,
+  //     subMenus: [
+  //       {
+  //         sub_menu_id: 1,
+  //         sub_menu_name: "Dashboard",
+  //         sub_menu_logo: null,
+  //         sub_menu_path: "/user/dashboard",
+  //       },
+  //       {
+  //         sub_menu_id: 2,
+  //         sub_menu_name: "Roles",
+  //         sub_menu_logo: null,
+  //         sub_menu_path: "/users/roles",
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const toggleMenu = (menuName, e) => {
     e.preventDefault();
-    setOpenMenus(prev => ({
+    setOpenMenus((prev) => ({
       ...prev,
-      [menuName]: !prev[menuName]
+      [menuName]: !prev[menuName],
     }));
   };
 
-  const logout = ()=>{
+  const logout = () => {
     removeToken();
-    Navigate('/login');
-  }
+    Navigate("/login");
+  };
 
   return (
     <aside className="w-64 bg-orange-100 p-4 min-h-[calc(100vh-64px)] flex flex-col gap-2">
       {menuItems.map((item) => (
-        <div key={item.name}>
+        <div key={item.menu_id}>
           {item.hasSubmenu ? (
             <div className="space-y-1">
-              <div 
-                onClick={(e) => toggleMenu(item.name, e)}
+              {/* Main menu with submenu */}
+              <div
+                onClick={(e) => toggleMenu(item.menu_name, e)}
                 className="w-full rounded-md p-3 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer"
               >
-                {item.name}
-                <ChevronDown 
+                {item.menu_name}
+                <ChevronDown
                   className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
-                    openMenus[item.name] ? 'rotate-180' : ''
-                  }`} 
+                    openMenus[item.menu_name] ? "rotate-180" : ""
+                  }`}
                 />
               </div>
-              <div 
+              {/* Submenu items */}
+              <div
                 className={`transform origin-top transition-all duration-300 ease-in-out ${
-                  openMenus[item.name] ? 'h-auto opacity-100' : 'h-0 opacity-0'
+                  openMenus[item.menu_name]
+                    ? "h-auto opacity-100"
+                    : "h-0 opacity-0"
                 } overflow-hidden`}
               >
-                {item.submenu?.map(subItem => (
-                  <NavLink
-                    key={subItem.name}
-                    to={subItem.path}
-                    className={({ isActive }) =>
-                      `w-full text-left pl-6 p-2 rounded-md block ${
-                        isActive ? 'bg-orange-200' : 'hover:bg-orange-50'
-                      }`
-                    }
-                  >
-                    {subItem.name}
-                  </NavLink>
+                {item.subMenus.map((subItem) => (
+                  subItem.sub_menu_name && (
+                    <NavLink
+                      key={subItem.sub_menu_id}
+                      to={subItem.sub_menu_path}
+                      className={({ isActive }) =>
+                        `w-full text-left pl-6 p-2 rounded-md block ${
+                          isActive ? "bg-orange-200" : "hover:bg-orange-50"
+                        }`
+                      }
+                    >
+                      {subItem.sub_menu_name}
+                    </NavLink>
+                  )
                 ))}
               </div>
             </div>
           ) : (
-            <NavLink 
-              to={item.path}
-              className={({ isActive }) => 
+            // Main menu without submenu
+            <NavLink
+              to={item.menu_path}
+              className={({ isActive }) =>
                 `w-full rounded-md p-3 flex justify-between items-center ${
-                  isActive ? 'bg-orange-200' : 'bg-white hover:bg-gray-50'
+                  isActive ? "bg-orange-200" : "bg-white hover:bg-gray-50"
                 }`
               }
             >
-              {item.name}
+              {item.menu_name}
             </NavLink>
           )}
         </div>
       ))}
-      <button onClick={()=>logout()} className="mt-auto bg-orange-100 p-3 flex items-center justify-center gap-2 rounded-md hover:bg-orange-200">
+      {/* Logout Button */}
+      <button
+        onClick={logout}
+        className="mt-auto bg-orange-100 p-3 flex items-center justify-center gap-2 rounded-md hover:bg-orange-200"
+      >
         <LogOut className="w-4 h-4" />
         Sign Out
       </button>

@@ -8,8 +8,8 @@ import { setToken } from "../../providers/CookieHandler";
 const LoginPage = () => {
   const Navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("sa");
+  const [password, setPassword] = useState("Ktmnepal@1");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("Sign In");
 
@@ -32,7 +32,7 @@ const LoginPage = () => {
     try {
       const response = await loginService(username, password);
       if (response.code === 0) {
-        setToken(response.data.token, response.data.sessionId);
+        setToken(response.data.token, response.data.sessionId, response.data.navMenu);
         toast.success("Logged in successfully.");
         Navigate("/dashboard");
       } else {
