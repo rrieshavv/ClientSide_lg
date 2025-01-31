@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import DeleteModal from "../../dashboard/components/CustomUI/DeleteModal";
 import { CreateDepartment } from "./CreateDepartment";
 import { Button } from "../../dashboard/components/CustomUI";
+import EditDepartment from "./EditDepartment";
 
 const DepartmentPage = () => {
   const [departments, setDepartments] = useState([]);
@@ -18,6 +19,7 @@ const DepartmentPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchDepartments();
@@ -51,6 +53,11 @@ const DepartmentPage = () => {
     }
   };
 
+  const handleEditClick = (department) => {
+    setSelectedDepartment(department);
+    setIsEditModalOpen(true);
+  };
+
   const handleDeleteClick = (department) => {
     setSelectedDepartment(department);
     setIsModalOpen(true);
@@ -63,16 +70,8 @@ const DepartmentPage = () => {
       const response = await deleteDepartment(selectedDepartment.department_id);
       if (response.code === 0) {
         toast.success("Department deleted successfully!");
-        setDepartments(
-          departments.filter(
-            (dept) => dept.department_id !== selectedDepartment.department_id
-          )
-        );
-        setFilteredDepartments(
-          filteredDepartments.filter(
-            (dept) => dept.department_id !== selectedDepartment.department_id
-          )
-        ); // Remove from filtered list as well
+        setDepartments(departments.filter((dept) => dept.department_id !== selectedDepartment.department_id));
+        setFilteredDepartments(filteredDepartments.filter((dept) => dept.department_id !== selectedDepartment.department_id));
       } else {
         toast.error(response.message);
       }
@@ -85,12 +84,23 @@ const DepartmentPage = () => {
     setSelectedDepartment(null);
   };
 
-  // Filtering Logic
+  const handleEditDepartment = (departmentId, name, isActive) => {
+    setDepartments(departments.map(department =>
+      department.department_id === departmentId
+        ? { ...department, name, is_active: isActive }
+        : department
+    ));
+    setFilteredDepartments(filteredDepartments.map(department =>
+      department.department_id === departmentId
+        ? { ...department, name, is_active: isActive }
+        : department
+    ));
+  };
+
   const handleFilterChange = (e) => {
     const searchText = e.target.value;
     setFilterText(searchText);
 
-    // Filter departments by name (case insensitive)
     const filtered = departments.filter((dept) =>
       dept.name.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -120,7 +130,7 @@ const DepartmentPage = () => {
       renderCell: ({ row }) => (
         <span className="flex gap-2">
           <Button
-            onClick={() => handleDeleteClick(row)}
+            onClick={() => handleEditClick(row)}
             variant="outline"
             size="sm"
           >
@@ -142,13 +152,6 @@ const DepartmentPage = () => {
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">Departments</h3>
-        {/* <button
-          onClick={() => setIsCreateModalOpen(true)}
-          className="bg-red-400 p-2 rounded-md w-fit"
-        >
-          Create department
-        </button> */}
-
         <Button
           onClick={() => setIsCreateModalOpen(true)}
           className="w-fit"
@@ -170,11 +173,10 @@ const DepartmentPage = () => {
       <DataGrid
         className="rdg-light mt-3"
         columns={columns}
-        rows={filteredDepartments} // Display filtered departments
+        rows={filteredDepartments}
         rowKeyGetter={(row) => row.department_id}
       />
 
-      {/* Delete Confirmation Modal */}
       <DeleteModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -186,6 +188,13 @@ const DepartmentPage = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreate={handleCreateDepartment}
+      />
+
+      <EditDepartment
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        departmentId={selectedDepartment?.department_id}
+        onUpdate={handleEditDepartment}
       />
     </div>
   );
