@@ -1,10 +1,4 @@
-import React, { useState } from "react";
-// import { Button } from '../dashboard/components/CustomUI/Button'
-// import {Card} from '../dashboard/components/CustomUI/Card'
-// import {CardHeader} from '../dashboard/components/CustomUI/CardHeader'
-// import {CardTitle} from '../dashboard/components/CustomUI/CardTitle'
-// import {CardContent} from '../dashboard/components/CustomUI/CardContent'
-// import {Alert} from '../dashboard/components/CustomUI/Alert'
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Button,
@@ -17,6 +11,7 @@ import {
   Label,
   Select,
 } from "../dashboard/components/CustomUI/index";
+import { createUser, getRoles } from "../../services/userService";
 
 const CreateUser = () => {
   const [formData, setFormData] = useState({
@@ -28,12 +23,25 @@ const CreateUser = () => {
     confirmPassword: "",
     mobile: "",
     roleId: "",
-    department: "IT",
   });
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [generalError, setGeneralError] = useState("");
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const roles = async () => {
+      try {
+        const roles = await getRoles();
+        setRoles(roles.data);
+      } catch (err) {
+        setGeneralError(err || "Failed to fetch roles");
+      }
+    };
+
+    roles();
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -73,6 +81,10 @@ const CreateUser = () => {
       newErrors.mobile = "Please enter a valid 10-digit mobile number";
     }
 
+    if (!formData.roleId) {
+      newErrors.roleId = "Role selection is required";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -88,35 +100,28 @@ const CreateUser = () => {
     }
 
     try {
-      // Simulating API call
-      const query = `SELECT * FROM fn_create_user(
-        p_username := '${formData.username}',
-        p_email := '${formData.email}',
-        p_firstname := '${formData.firstname}',
-        p_lastname := '${formData.lastname}',
-        p_password := '${formData.password}',
-        p_mobile := '${formData.mobile}',
-        p_roleid := '7577fae1-2ad2-4f52-b508-26dd9582ccb8',
-        p_createdby := 'sa'
-      )`;
+      const res = await createUser(formData);
 
-      console.log("Query:", query);
-      setSuccess("User created successfully!");
-
-      // Reset form
-      setFormData({
-        username: "",
-        email: "",
-        firstname: "",
-        lastname: "",
-        password: "",
-        confirmPassword: "",
-        mobile: "",
-        roleId: "",
-        department: "IT",
-      });
+      if (res.code === 0) {
+        setSuccess(res.message);
+        
+        //Reset form
+        setFormData({
+          username: "",
+          email: "",
+          firstname: "",
+          lastname: "",
+          password: "",
+          confirmPassword: "",
+          mobile: "",
+          roleId: "",
+        });
+      } else {
+        setGeneralError(res.message);
+      }
     } catch (err) {
-      setGeneralError("Failed to create user. Please try again.");
+      console.log(err)
+      setGeneralError(err);
     }
   };
 
@@ -256,19 +261,23 @@ const CreateUser = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="department">Department</Label>
+              <Label htmlFor="roles">Roles</Label>
               <Select
-                id="department"
-                name="department"
-                value={formData.department}
+                id="roleId"
+                name="roleId"
+                value={formData.roleId}
                 onChange={handleChange}
               >
-                <option value="IT">IT</option>
-                <option value="HR">HR</option>
-                <option value="Finance">Finance</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Operations">Operations</option>
+                <option value="" disabled>
+                  Select a role
+                </option>
+                {roles.map((role) => (
+                  <option key={role.role_id} value={role.role_id}>
+                    {role.name}
+                  </option>
+                ))}
               </Select>
+              {errors.roleId && <p className="text-red-500">{errors.roleId}</p>}
             </FormGroup>
           </div>
 
@@ -280,7 +289,7 @@ const CreateUser = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" >Create User</Button>
+            <Button type="submit">Create User</Button>
           </div>
         </form>
       </CardContent>
