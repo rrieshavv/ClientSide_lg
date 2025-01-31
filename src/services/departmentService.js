@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { getBackendUrl } from "../providers/Helper";
 import { apiClient } from "../providers/apiClient";
 
@@ -14,16 +14,22 @@ export const getAllDepartments = async () => {
 
 export const deleteDepartment = async (id) => {
   try {
-    return (
-      await apiClient.delete("/department", {
-        deparmentId: id,
-      })
-    ).data;
+    return (await apiClient.post(`/department/delete?departmentId=${id}`)).data;
   } catch (error) {
     throw error.response?.data?.message || "An error occurred";
   }
 };
 
-export const createDepartment = async ()=>{
+export const createDepartment = async (Name, IsActive) => {
+  try {
+    const dto = {
+      name: Name, 
+      is_active: IsActive,
+    };
+    return (await apiClient.post(`/department/create`, dto)).data;
+  } catch (error) {
+    console.error("Error:", error.response?.data || error.message);
+    throw error.response?.data?.message || "An error occurred";
+  }
+};
 
-}

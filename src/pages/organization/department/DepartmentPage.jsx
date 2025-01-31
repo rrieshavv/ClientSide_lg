@@ -1,5 +1,5 @@
 import "react-data-grid/lib/styles.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DataGrid from "react-data-grid";
 import {
   getAllDepartments,
@@ -39,7 +39,7 @@ const DepartmentPage = () => {
 
   const handleCreateDepartment = async (name, isActive) => {
     try {
-      const response = await createDepartment({ name, is_active: isActive });
+      const response = await createDepartment(name, isActive);
       if (response.code === 0) {
         toast.success("Department created successfully!");
         fetchDepartments(); // Re-fetch the department list to include the new department
@@ -47,7 +47,6 @@ const DepartmentPage = () => {
         toast.error(response.message);
       }
     } catch (error) {
-      console.error("Error creating department:", error);
       toast.error("Failed to create department.");
     }
   };
@@ -143,12 +142,20 @@ const DepartmentPage = () => {
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">Departments</h3>
-        <button
+        {/* <button
           onClick={() => setIsCreateModalOpen(true)}
           className="bg-red-400 p-2 rounded-md w-fit"
         >
           Create department
-        </button>
+        </button> */}
+
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="w-fit"
+          variant="default"
+        >
+          Create department
+        </Button>
       </div>
 
       {/* Search Input for Filtering */}
