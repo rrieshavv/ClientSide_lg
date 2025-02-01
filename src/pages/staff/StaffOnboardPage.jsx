@@ -83,22 +83,22 @@ const StaffOnboardPage = () => {
     fetchDesignations();
   }, []);
 
-const clearForm = ()=>{
+  const clearForm = () => {
     setFormData({
-        department_id: "",
-        firstname: "",
-        lastname: "",
-        email: "",
-        mobile: "",
-        designation: "",
-        level: "",
-        address: "",
-        dob: "",
-        joining_date: "",
-        phone: "",
-        middlename: "",
+      department_id: "",
+      firstname: "",
+      lastname: "",
+      email: "",
+      mobile: "",
+      designation: "",
+      level: "",
+      address: "",
+      dob: "",
+      joining_date: "",
+      phone: "",
+      middlename: "",
     });
-}
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -397,13 +397,9 @@ const clearForm = ()=>{
             </FormGroup>
           </div>
           <div className="flex justify-end space-x-4 mt-8">
-             <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => clearForm()}
-                      >
-                        Clear
-                      </Button> 
+            <Button type="button" variant="outline" onClick={() => clearForm()}>
+              Clear
+            </Button>
             <Button type="submit">Confirm</Button>
           </div>
         </form>

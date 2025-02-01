@@ -22,3 +22,19 @@ export const onboardStaff = async (formData) => {
     throw err.response?.data?.message || "An error occurred";
   }
 };
+
+export const getStaffDetails = async (id) =>{
+  try{
+    return (await (apiClient.get(`/employee/get-emp-details?id=${id}`))).data;
+  }catch(err){
+    throw err.response?.data?.message || "An error occurred";
+  }
+}
+
+export const getStaffList = async()=>{
+  try{
+    return (await (apiClient.get(`/employee/get-emp-list`))).data;
+  }catch(err){
+    throw err.response?.data?.message || "An error occurred";
+  }
+}
