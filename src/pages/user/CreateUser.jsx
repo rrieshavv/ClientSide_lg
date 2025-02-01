@@ -120,7 +120,7 @@ const CreateUser = () => {
         setGeneralError(res.message);
       }
     } catch (err) {
-      console.log(err)
+      // console.log(err)
       setGeneralError(err);
     }
   };
