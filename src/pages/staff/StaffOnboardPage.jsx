@@ -83,6 +83,23 @@ const StaffOnboardPage = () => {
     fetchDesignations();
   }, []);
 
+const clearForm = ()=>{
+    setFormData({
+        department_id: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        mobile: "",
+        designation: "",
+        level: "",
+        address: "",
+        dob: "",
+        joining_date: "",
+        phone: "",
+        middlename: "",
+    });
+}
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -156,7 +173,7 @@ const StaffOnboardPage = () => {
     setSuccess("");
 
     if (!validateForm()) {
-      setGeneralError("Please fix the errors in the form");
+      setGeneralError("Please fix the errors in the form.");
       return;
     }
 
@@ -165,22 +182,7 @@ const StaffOnboardPage = () => {
 
       if (res.code === 0) {
         setSuccess(res.message);
-
-        //Reset form
-        setFormData({
-            department_id: "",
-            firstname: "",
-            lastname: "",
-            email: "",
-            mobile: "",
-            designation: "",
-            level: "",
-            address: "",
-            dob: "",
-            joining_date: "",
-            phone: "",
-            middlename: "",
-        });
+        clearForm();
       } else {
         setGeneralError(res.message);
       }
@@ -395,13 +397,13 @@ const StaffOnboardPage = () => {
             </FormGroup>
           </div>
           <div className="flex justify-end space-x-4 mt-8">
-            {/* <Button
+             <Button
                         type="button"
                         variant="outline"
-                        onClick={() => window.history.back()}
+                        onClick={() => clearForm()}
                       >
-                        Cancel
-                      </Button> */}
+                        Clear
+                      </Button> 
             <Button type="submit">Confirm</Button>
           </div>
         </form>
