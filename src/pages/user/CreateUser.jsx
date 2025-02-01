@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Alert,
   Button,
@@ -95,7 +95,7 @@ const CreateUser = () => {
     setSuccess("");
 
     if (!validateForm()) {
-      setGeneralError("Please fix the errors in the form");
+      setGeneralError("Please fix the errors in the form.");
       return;
     }
 
@@ -120,7 +120,7 @@ const CreateUser = () => {
         setGeneralError(res.message);
       }
     } catch (err) {
-      console.log(err)
+      // console.log(err)
       setGeneralError(err);
     }
   };

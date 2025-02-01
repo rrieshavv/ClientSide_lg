@@ -10,6 +10,9 @@ import ProfilePage from "./pages/dashboard/ProfilePage";
 import UserManagementPage from "./pages/user/UserManagementPage";
 import CreateUser from "./pages/user/CreateUser";
 import DepartmentPage from "./pages/organization/department/DepartmentPage";
+import StaffDashboardPage from "./pages/staff/StaffDashboardPage";
+import StaffOnboardPage from "./pages/staff/StaffOnboardPage";
+import StaffProfilePage from "./pages/staff/StaffProfilePage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -91,7 +94,12 @@ function App() {
           <Route path="profile" element={<ProfilePage/>} />
           <Route path="user/dashboard" element={<UserManagementPage/>} />
           <Route path="user/create" element={<CreateUser/>}/>
+          {/* organization */}
           <Route path="organization/department" element={<DepartmentPage/>}/>
+          {/* staff */}
+          <Route path="staff/dashboard" element={<StaffDashboardPage/>}/>
+          <Route path="staff/onboard" element={<StaffOnboardPage/>}/>
+          <Route path="staff/profile" element={<StaffProfilePage/>}/>
         </Route>
       </Routes>
     </>
