@@ -1,0 +1,17 @@
+import { apiClient } from "../providers/apiClient";
+
+export const getAllShifts = async () => {
+  try {
+    return (await apiClient.get("/shift/get-all")).data;
+  } catch (error) {
+    throw error.response?.data?.message || "An error occurred";
+  }
+};
+
+export const getShiftDetails = async (id) => {
+  try {
+    return (await apiClient.get(`/shift/get-shift?id=${id}`)).data;
+  } catch (error) {
+    throw error.response?.data?.message || "An error occurred";
+  }
+};
