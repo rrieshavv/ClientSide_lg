@@ -15,3 +15,11 @@ export const getShiftDetails = async (id) => {
     throw error.response?.data?.message || "An error occurred";
   }
 };
+
+export const getStaffInShift = async (id) => {
+  try {
+    return (await apiClient.get(`/shift/emp-in-shift?id=${id}`)).data;
+  } catch (error) {
+    throw error.response?.data?.message || "An error occurred";
+  }
+};
