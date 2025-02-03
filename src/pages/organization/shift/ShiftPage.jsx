@@ -123,7 +123,7 @@ const ShiftPage = () => {
         rows={filteredShifts}
         rowKeyGetter={(row) => row.id}
       />
-      ;
+      
     </div>
   );
 };
