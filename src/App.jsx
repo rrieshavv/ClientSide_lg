@@ -13,6 +13,8 @@ import DepartmentPage from "./pages/organization/department/DepartmentPage";
 import StaffDashboardPage from "./pages/staff/StaffDashboardPage";
 import StaffOnboardPage from "./pages/staff/StaffOnboardPage";
 import StaffProfilePage from "./pages/staff/StaffProfilePage";
+import ShiftPage from "./pages/organization/shift/ShiftPage";
+import ShiftDetailPage from "./pages/organization/shift/ShiftDetailPage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -96,6 +98,8 @@ function App() {
           <Route path="user/create" element={<CreateUser/>}/>
           {/* organization */}
           <Route path="organization/department" element={<DepartmentPage/>}/>
+          <Route path="organization/shift" element={<ShiftPage/>}/>
+          <Route path="organization/shift/details" element={<ShiftDetailPage/>}/>
           {/* staff */}
           <Route path="staff/dashboard" element={<StaffDashboardPage/>}/>
           <Route path="staff/onboard" element={<StaffOnboardPage/>}/>
