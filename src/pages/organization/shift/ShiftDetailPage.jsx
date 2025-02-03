@@ -1,9 +1,13 @@
 import "react-data-grid/lib/styles.css";
 import DataGrid from "react-data-grid";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { getShiftDetails } from "../../../services/shiftService";
+import {
+  getShiftDetails,
+  getStaffInShift,
+} from "../../../services/shiftService";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Button } from "../../dashboard/components/CustomUI";
 
 const ShiftDetailPage = () => {
   const [searchParams] = useSearchParams();
@@ -11,9 +15,11 @@ const ShiftDetailPage = () => {
   const shiftId = searchParams.get("id");
 
   const [shift, setShift] = useState({});
+  const [staff, setStaff] = useState([]);
 
   useEffect(() => {
     fetchShiftDetails();
+    fetchStaffInShift();
   }, []);
 
   const fetchShiftDetails = async () => {
@@ -21,6 +27,21 @@ const ShiftDetailPage = () => {
       const res = await getShiftDetails(shiftId);
       if (res.code === 0) {
         setShift(res.data);
+      } else {
+        toast.error(res.message);
+        navigate("/organization/shift");
+      }
+    } catch {
+      toast.error("Error occurred.");
+      navigate("/organization/shift");
+    }
+  };
+
+  const fetchStaffInShift = async () => {
+    try {
+      const res = await getStaffInShift(shiftId);
+      if (res.code === 0) {
+        setStaff(res.data);
       } else {
         toast.error(res.message);
         navigate("/organization/shift");
@@ -100,8 +121,15 @@ const ShiftDetailPage = () => {
       isOff: shift.issaturdayoff,
     },
   ];
+
+  const staffColumn = [
+    { key: "staffName", name: "Staff Name" },
+    { key: "designation", name: "Designation" },
+    { key: "departmentName", name: "Department" },
+  ];
+
   return (
-    <div className="w-full m-3">
+    <div className="w-full m-3 ">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">
           <Link
@@ -114,13 +142,32 @@ const ShiftDetailPage = () => {
         </h3>
       </div>
 
-      {/* Wrapper with full height */}
-      <div className="w-full h-[400px] mt-3">
-        <DataGrid 
+      <div className="w-full mt-3">
+        <DataGrid
           className="rdg-light"
           columns={columns}
           rows={rows}
-          rowHeight={40} 
+          rowHeight={40}
+        />
+      </div>
+
+      <div className="my-3 flex justify-between items-center w-full">
+        <h3 className="font-semibold">Staff in shift</h3>
+        <Button
+          // onClick={() => setIsCreateModalOpen(true)}
+          className="w-fit"
+          variant="default"
+        >
+          Add Employee
+        </Button>
+      </div>
+
+      <div className="w-full mt-3">
+        <DataGrid
+          className="rdg-light"
+          columns={staffColumn}
+          rows={staff}
+          rowHeight={40}
         />
       </div>
     </div>
