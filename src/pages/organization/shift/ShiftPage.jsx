@@ -101,13 +101,15 @@ const ShiftPage = () => {
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">Shifts</h3>
-        <Button
-          //   onClick={() => setIsCreateModalOpen(true)}
-          className="w-fit"
-          variant="default"
-        >
-          Create Shift
-        </Button>
+        <Link to="/organization/shift/create">
+          <Button
+            //   onClick={() => setIsCreateModalOpen(true)}
+            className="w-fit"
+            variant="default"
+          >
+            Create Shift
+          </Button>
+        </Link>
       </div>
       {/* Search Input for Filtering */}
       <input
@@ -123,7 +125,6 @@ const ShiftPage = () => {
         rows={filteredShifts}
         rowKeyGetter={(row) => row.id}
       />
-      
     </div>
   );
 };
