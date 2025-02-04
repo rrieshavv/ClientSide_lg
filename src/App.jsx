@@ -15,6 +15,7 @@ import StaffOnboardPage from "./pages/staff/StaffOnboardPage";
 import StaffProfilePage from "./pages/staff/StaffProfilePage";
 import ShiftPage from "./pages/organization/shift/ShiftPage";
 import ShiftDetailPage from "./pages/organization/shift/ShiftDetailPage";
+import ShiftCreatePage from "./pages/organization/shift/ShiftCreatePage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -100,6 +101,7 @@ function App() {
           <Route path="organization/department" element={<DepartmentPage/>}/>
           <Route path="organization/shift" element={<ShiftPage/>}/>
           <Route path="organization/shift/details" element={<ShiftDetailPage/>}/>
+          <Route path="organization/shift/create" element={<ShiftCreatePage/>}/>
           {/* staff */}
           <Route path="staff/dashboard" element={<StaffDashboardPage/>}/>
           <Route path="staff/onboard" element={<StaffOnboardPage/>}/>

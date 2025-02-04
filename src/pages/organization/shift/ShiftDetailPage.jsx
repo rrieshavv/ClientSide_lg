@@ -22,11 +22,32 @@ const ShiftDetailPage = () => {
     fetchStaffInShift();
   }, []);
 
+  const renderStaffTable = () => {
+    if (!staff || staff.length === 0) {
+      return (
+        <div className="w-full mt-3">
+          <p className="text-center text-gray-500">No staff assigned to this shift.</p>
+        </div>
+      );
+    }
+  
+    return (
+      <div className="w-full mt-3">
+        <DataGrid
+          className="rdg-light"
+          columns={staffColumn}
+          rows={staff}
+          rowHeight={40}
+        />
+      </div>
+    );
+  };
+
   const fetchShiftDetails = async () => {
     try {
       const res = await getShiftDetails(shiftId);
       if (res.code === 0) {
-        setShift(res.data);
+        setShift(res.data || []);
       } else {
         toast.error(res.message);
         navigate("/organization/shift");
@@ -162,14 +183,7 @@ const ShiftDetailPage = () => {
         </Button>
       </div>
 
-      <div className="w-full mt-3">
-        <DataGrid
-          className="rdg-light"
-          columns={staffColumn}
-          rows={staff}
-          rowHeight={40}
-        />
-      </div>
+      {renderStaffTable()} {/* Call the render function here */}
     </div>
   );
 };

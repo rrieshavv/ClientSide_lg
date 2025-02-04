@@ -1,16 +1,18 @@
 import "react-data-grid/lib/styles.css";
 import { useEffect, useState } from "react";
-import { getAllShifts } from "../../../services/shiftService";
+import { deleteShift, getAllShifts } from "../../../services/shiftService";
 import { toast } from "react-toastify";
 import { Button } from "../../dashboard/components/CustomUI";
 import DataGrid from "react-data-grid";
 import { Link } from "react-router-dom";
+import DeleteModal from "../../dashboard/components/CustomUI/DeleteModal";
 
 const ShiftPage = () => {
   const [shifts, setShifts] = useState([]);
   const [filteredShifts, setFilteredShifts] = useState([]);
   const [filterText, setFilterText] = useState("");
-  const [selectedShifts, setSelectedShifts] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchShifts();
@@ -39,6 +41,34 @@ const ShiftPage = () => {
       s.name.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilteredShifts(filtered);
+  };
+
+  const handleDeleteClick = (shift) => {
+    setSelectedShift(shift);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedShift) return;
+
+    try {
+      const response = await deleteShift(selectedShift.id);
+      if (response.code === 0) {
+        toast.success("Shift deleted successfully!");
+        setShifts(shifts.filter((shift) => shift.id !== selectedShift.id));
+        setFilteredShifts(
+          filteredShifts.filter((shift) => shift.id !== selectedShift.id)
+        );
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error("Error deleting department:", error);
+      toast.error("Failed to delete department.");
+    }
+
+    setIsModalOpen(false);
+    setSelectedShift(null);
   };
 
   const columns = [
@@ -86,7 +116,7 @@ const ShiftPage = () => {
             Edit
           </Button>
           <Button
-            //   onClick={() => handleDeleteClick(row)}
+            onClick={() => handleDeleteClick(row)}
             variant="destructive"
             size="sm"
           >
@@ -101,13 +131,15 @@ const ShiftPage = () => {
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">Shifts</h3>
-        <Button
-          //   onClick={() => setIsCreateModalOpen(true)}
-          className="w-fit"
-          variant="default"
-        >
-          Create Shift
-        </Button>
+        <Link to="/organization/shift/create">
+          <Button
+            //   onClick={() => setIsCreateModalOpen(true)}
+            className="w-fit"
+            variant="default"
+          >
+            Create Shift
+          </Button>
+        </Link>
       </div>
       {/* Search Input for Filtering */}
       <input
@@ -123,7 +155,12 @@ const ShiftPage = () => {
         rows={filteredShifts}
         rowKeyGetter={(row) => row.id}
       />
-      
+      <DeleteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        department={selectedShift}
+      />
     </div>
   );
 };
