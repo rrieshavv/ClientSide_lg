@@ -26,7 +26,15 @@ export const getStaffInShift = async (id) => {
 
 export const createNewShift = async (formData) => {
   try {
-    return (await apiClient.post('/shift/create', formData)).data;
+    return (await apiClient.post("/shift/create", formData)).data;
+  } catch (error) {
+    throw error.response?.data?.message || "An error occurred";
+  }
+};
+
+export const deleteShift = async (id) => {
+  try {
+    return (await apiClient.post(`/shift/delete?id=${id}`)).data;
   } catch (error) {
     throw error.response?.data?.message || "An error occurred";
   }
