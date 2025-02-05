@@ -48,7 +48,7 @@ const DepartmentPage = () => {
       } else {
         toast.error(response.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to create department.");
     }
   };

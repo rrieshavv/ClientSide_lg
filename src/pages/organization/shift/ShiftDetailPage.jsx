@@ -8,6 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../../dashboard/components/CustomUI";
+import ShiftAddStaff from "./ShiftAddStaff";
+import { addStaffToShift } from "../../../services/staffService";
 
 const ShiftDetailPage = () => {
   const [searchParams] = useSearchParams();
@@ -16,11 +18,35 @@ const ShiftDetailPage = () => {
 
   const [shift, setShift] = useState({});
   const [staff, setStaff] = useState([]);
+  const [isAddModelOpen, setIsAddModelOpen] = useState(false);
 
   useEffect(() => {
     fetchShiftDetails();
     fetchStaffInShift();
   }, []);
+
+  const renderStaffTable = () => {
+    if (!staff || staff.length === 0) {
+      return (
+        <div className="w-full mt-3">
+          <p className="text-center text-gray-500">
+            No staff assigned to this shift.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full mt-3">
+        <DataGrid
+          className="rdg-light"
+          columns={staffColumn}
+          rows={staff}
+          rowHeight={40}
+        />
+      </div>
+    );
+  };
 
   const fetchShiftDetails = async () => {
     try {
@@ -49,6 +75,25 @@ const ShiftDetailPage = () => {
     } catch {
       toast.error("Error occurred.");
       navigate("/organization/shift");
+    }
+  };
+
+  const handleAdd = async (empId) => {
+    if (empId === "") {
+      toast.warning("Please select employee first.");
+      return;
+    }
+
+    try {
+      const res = await addStaffToShift(empId, shiftId);
+      if (res.code === 0) {
+        toast.success(res.message);
+        fetchStaffInShift();
+      } else {
+        toast.error(res.message);
+      }
+    } catch {
+      toast.error("Error occurred.");
     }
   };
 
@@ -141,7 +186,6 @@ const ShiftDetailPage = () => {
           {shift.name?.toUpperCase()}
         </h3>
       </div>
-
       <div className="w-full mt-3">
         <DataGrid
           className="rdg-light"
@@ -150,26 +194,22 @@ const ShiftDetailPage = () => {
           rowHeight={40}
         />
       </div>
-
       <div className="my-3 flex justify-between items-center w-full">
         <h3 className="font-semibold">Staff in shift</h3>
         <Button
-          // onClick={() => setIsCreateModalOpen(true)}
+          onClick={() => setIsAddModelOpen(true)}
           className="w-fit"
           variant="default"
         >
           Add Employee
         </Button>
       </div>
-
-      <div className="w-full mt-3">
-        <DataGrid
-          className="rdg-light"
-          columns={staffColumn}
-          rows={staff}
-          rowHeight={40}
-        />
-      </div>
+      {renderStaffTable()} {/* Call the render function here */}
+      <ShiftAddStaff
+        isOpen={isAddModelOpen}
+        onClose={() => setIsAddModelOpen(false)}
+        onAdd={handleAdd}
+      />
     </div>
   );
 };
