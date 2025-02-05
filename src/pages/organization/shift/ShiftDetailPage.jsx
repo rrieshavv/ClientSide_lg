@@ -47,7 +47,7 @@ const ShiftDetailPage = () => {
     try {
       const res = await getShiftDetails(shiftId);
       if (res.code === 0) {
-        setShift(res.data || []);
+        setShift(res.data );
       } else {
         toast.error(res.message);
         navigate("/organization/shift");

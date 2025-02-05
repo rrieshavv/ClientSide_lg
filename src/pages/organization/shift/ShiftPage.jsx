@@ -27,7 +27,7 @@ const ShiftPage = () => {
       } else {
         toast.error(data.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Error loading shifts.");
       //   console.error("Error fetching departments:", error);
     }
@@ -108,13 +108,11 @@ const ShiftPage = () => {
       name: "Action",
       renderCell: ({ row }) => (
         <span className="flex gap-2">
-          <Button
-            //   onClick={() => handleEditClick(row)}
-            variant="outline"
-            size="sm"
-          >
-            Edit
-          </Button>
+          <Link to={`/organization/shift/edit?id=${row.id}`}>
+            <Button variant="outline" size="sm">
+              Edit
+            </Button>
+          </Link>
           <Button
             onClick={() => handleDeleteClick(row)}
             variant="destructive"
