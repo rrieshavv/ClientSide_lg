@@ -23,18 +23,34 @@ export const onboardStaff = async (formData) => {
   }
 };
 
-export const getStaffDetails = async (id) =>{
-  try{
-    return (await (apiClient.get(`/employee/get-emp-details?id=${id}`))).data;
-  }catch(err){
+export const getStaffDetails = async (id) => {
+  try {
+    return (await apiClient.get(`/employee/get-emp-details?id=${id}`)).data;
+  } catch (err) {
     throw err.response?.data?.message || "An error occurred";
   }
-}
+};
 
-export const getStaffList = async()=>{
-  try{
-    return (await (apiClient.get(`/employee/get-emp-list`))).data;
-  }catch(err){
+export const getStaffList = async () => {
+  try {
+    return (await apiClient.get(`/employee/get-emp-list`)).data;
+  } catch (err) {
+    throw err.response?.data?.message || "An error occurred";
+  }
+};
+
+export const searchStaff = async (param) => {
+  try {
+    return (await apiClient.get(`/Employee/search-emp?param=${param}`)).data;
+  } catch (err) {
+    throw err.response?.data?.message || "An error occurred";
+  }
+};
+
+export const addStaffToShift=async(empId, shiftId)=>{
+  try {
+    return (await apiClient.post(`/shift/add-emp-to-shift?empId=${empId}&shiftId=${shiftId}`)).data;
+  } catch (err) {
     throw err.response?.data?.message || "An error occurred";
   }
 }

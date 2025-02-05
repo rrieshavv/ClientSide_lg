@@ -1,4 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { editShift, getShiftDetails } from "../../../services/shiftService";
 import {
   Alert,
   Button,
@@ -8,12 +11,10 @@ import {
   Input,
   Label,
 } from "../../dashboard/components/CustomUI";
-import { useState } from "react";
-import { createNewShift } from "../../../services/shiftService";
-import { toast } from "react-toastify";
 
-const ShiftCreatePage = () => {
+const ShiftEditPage = () => {
   const [formData, setFormData] = useState({
+    id: "",
     name: "",
     isdisabled: "n",
     sundayin: "09:00",
@@ -42,7 +43,42 @@ const ShiftCreatePage = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [generalError, setGeneralError] = useState("");
+  const [params] = useSearchParams();
+  const shiftId = params.get("id");
   const navigate = useNavigate();
+  //   const [shift, setShift] = useState({});
+
+  useEffect(() => {
+    fetchShiftDetails();
+  }, []);
+
+  const fetchShiftDetails = async () => {
+    try {
+      const res = await getShiftDetails(shiftId);
+      if (res.code === 0) {
+        const modifiedData = { ...res.data };
+
+        [
+          "issundayoff",
+          "ismondayoff",
+          "istuesdayoff",
+          "iswednesdayoff",
+          "isthursdayoff",
+          "isfridayoff",
+          "issaturdayoff",
+        ].forEach((day) => {
+          modifiedData[day] = modifiedData[day] === "y" ? true : false;
+        });
+        setFormData(modifiedData);
+      } else {
+        toast.error(res.message);
+        navigate("/organization/shift");
+      }
+    } catch {
+      toast.error("Error occurred.");
+      navigate("/organization/shift");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -50,6 +86,34 @@ const ShiftCreatePage = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const clearform = () => {
+    setFormData({
+      name: "",
+      isdisabled: "n",
+      sundayin: "09:00",
+      sundayout: "18:00",
+      mondayin: "09:00",
+      mondayout: "18:00",
+      tuesdayin: "09:00",
+      tuesdayout: "18:00",
+      wednesdayin: "09:00",
+      wednesdayout: "18:00",
+      thursdayin: "09:00",
+      thursdayout: "18:00",
+      fridayin: "09:00",
+      fridayout: "18:00",
+      saturdayin: "09:00",
+      saturdayout: "18:00",
+      issundayoff: false,
+      ismondayoff: false,
+      istuesdayoff: false,
+      iswednesdayoff: false,
+      isthursdayoff: false,
+      isfridayoff: false,
+      issaturdayoff: false,
+    });
   };
 
   const validateForm = () => {
@@ -104,7 +168,6 @@ const ShiftCreatePage = () => {
 
     const modifiedFormData = { ...formData };
 
-    // Convert off fields to 'y' or 'n'
     [
       "issundayoff",
       "ismondayoff",
@@ -117,7 +180,6 @@ const ShiftCreatePage = () => {
       modifiedFormData[day] = modifiedFormData[day] ? "y" : "n";
     });
 
-    // Convert time fields to time-only format (HH:mm:ss) for C# TimeOnly
     [
       "sundayin",
       "sundayout",
@@ -139,15 +201,14 @@ const ShiftCreatePage = () => {
         modifiedFormData[field] = `${hours.padStart(2, "0")}:${minutes.padStart(
           2,
           "0"
-        )}:00`; // Add seconds
+        )}:00`; 
       }
     });
 
     try {
-      const res = await createNewShift(modifiedFormData);
+      const res = await editShift(modifiedFormData);
       if (res.code === 0) {
         toast.success(res.message);
-        navigate("/organization/shift");
       } else {
         toast.error(res.message);
       }
@@ -156,39 +217,10 @@ const ShiftCreatePage = () => {
     }
     console.log("valid", modifiedFormData);
   };
-
-  const clearform = () => {
-    setFormData({
-      name: "",
-      isdisabled: "n",
-      sundayin: "09:00",
-      sundayout: "18:00",
-      mondayin: "09:00",
-      mondayout: "18:00",
-      tuesdayin: "09:00",
-      tuesdayout: "18:00",
-      wednesdayin: "09:00",
-      wednesdayout: "18:00",
-      thursdayin: "09:00",
-      thursdayout: "18:00",
-      fridayin: "09:00",
-      fridayout: "18:00",
-      saturdayin: "09:00",
-      saturdayout: "18:00",
-      issundayoff: false,
-      ismondayoff: false,
-      istuesdayoff: false,
-      iswednesdayoff: false,
-      isthursdayoff: false,
-      isfridayoff: false,
-      issaturdayoff: false,
-    });
-  };
-
   return (
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
-        <h3 className="my-3 font-semibold">Create new shift</h3>
+        <h3 className="my-3 font-semibold">Edit shift: {formData.name}</h3>
         <Link to="/organization/shift">
           <Button className="w-fit" variant="outline">
             Back
@@ -268,7 +300,7 @@ const ShiftCreatePage = () => {
               <Button
                 type="button"
                 variant="outline"
-                 onClick={() => clearform()}
+                onClick={() => clearform()}
               >
                 Clear
               </Button>
@@ -281,4 +313,4 @@ const ShiftCreatePage = () => {
   );
 };
 
-export default ShiftCreatePage;
+export default ShiftEditPage;

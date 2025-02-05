@@ -39,3 +39,12 @@ export const deleteShift = async (id) => {
     throw error.response?.data?.message || "An error occurred";
   }
 };
+
+export const editShift = async (formData) =>{
+  try {
+    return (await apiClient.post("/shift/update", formData)).data;
+  } catch (error) {
+    throw error.response?.data?.message || "An error occurred";
+  }
+}
+
