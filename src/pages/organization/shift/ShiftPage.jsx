@@ -29,7 +29,6 @@ const ShiftPage = () => {
       }
     } catch {
       toast.error("Error loading shifts.");
-      //   console.error("Error fetching departments:", error);
     }
   };
 
