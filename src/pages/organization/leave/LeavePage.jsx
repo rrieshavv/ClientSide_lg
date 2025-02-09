@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../dashboard/components/CustomUI";
-import { getLeaves } from "../../../services/leaveService";
+import { deleteLeave, getLeaves } from "../../../services/leaveService";
 import { useEffect, useState } from "react";
 import DataGrid from "react-data-grid";
+import DeleteModal from "../../dashboard/components/CustomUI/DeleteModal";
+import { toast } from "react-toastify";
 
 const LeavePage = () => {
   const [leaves, setLeaves] = useState([]);
   const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [filterText, setFilterText] = useState("");
+  const [selectedLeave, setSelectedLeave] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchLeaves();
@@ -19,6 +23,27 @@ const LeavePage = () => {
       setLeaves(res.data);
       setFilteredLeaves(res.data);
     }
+  };
+
+  const handleDeleteClick = (leave) => {
+    setSelectedLeave(leave);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    const res = await deleteLeave(selectedLeave.id);
+    if (res.code === 0) {
+      toast.success("Leave deleted successfully!");
+      setLeaves(leaves.filter((shift) => shift.id !== selectedLeave.id));
+      setFilteredLeaves(
+        filteredLeaves.filter((shift) => shift.id !== selectedLeave.id)
+      );
+    } else {
+      toast.error(res.message);
+    }
+
+    setIsModalOpen(false);
+    setSelectedLeave(null);
   };
 
   const handleFilterChange = (e) => {
@@ -76,13 +101,13 @@ const LeavePage = () => {
       name: "Action",
       renderCell: ({ row }) => (
         <span className="flex gap-2">
-          <Link to={`/organization/shift/edit?id=${row.id}`}>
+          <Link to={`/organization/leave/edit?id=${row.id}`}>
             <Button variant="outline" size="sm">
               Edit
             </Button>
           </Link>
           <Button
-            // onClick={() => handleDeleteClick(row)}
+            onClick={() => handleDeleteClick(row)}
             variant="destructive"
             size="sm"
           >
@@ -97,12 +122,8 @@ const LeavePage = () => {
     <div className="w-full m-3">
       <div className="flex justify-between items-center w-full">
         <h3 className="my-3 font-semibold">Leave</h3>
-        <Link to="/organization/shift/create">
-          <Button
-            //   onClick={() => setIsCreateModalOpen(true)}
-            className="w-fit"
-            variant="default"
-          >
+        <Link to="/organization/leave/create">
+          <Button className="w-fit" variant="default">
             Create Leave
           </Button>
         </Link>
@@ -120,6 +141,12 @@ const LeavePage = () => {
         columns={columns}
         rows={filteredLeaves}
         rowKeyGetter={(row) => row.id}
+      />
+      <DeleteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        department={selectedLeave}
       />
     </div>
   );

@@ -18,6 +18,7 @@ import ShiftDetailPage from "./pages/organization/shift/ShiftDetailPage";
 import ShiftCreatePage from "./pages/organization/shift/ShiftCreatePage";
 import ShiftEditPage from "./pages/organization/shift/ShiftEditPage";
 import LeavePage from "./pages/organization/leave/LeavePage";
+import CreateLeavePage from "./pages/organization/leave/CreateLeavePage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -91,6 +92,9 @@ function App() {
           <Route path="organization/shift/edit" element={<ShiftEditPage />} />
 
           <Route path="organization/leave" element={<LeavePage />} />
+          <Route path="organization/leave/create" element={<CreateLeavePage />} />
+          <Route path="organization/leave/edit" element={<CreateLeavePage />} />
+          
           {/* staff */}
           <Route path="staff/dashboard" element={<StaffDashboardPage />} />
           <Route path="staff/onboard" element={<StaffOnboardPage />} />
