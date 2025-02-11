@@ -17,6 +17,8 @@ import ShiftPage from "./pages/organization/shift/ShiftPage";
 import ShiftDetailPage from "./pages/organization/shift/ShiftDetailPage";
 import ShiftCreatePage from "./pages/organization/shift/ShiftCreatePage";
 import ShiftEditPage from "./pages/organization/shift/ShiftEditPage";
+import LeavePage from "./pages/organization/leave/LeavePage";
+import CreateLeavePage from "./pages/organization/leave/CreateLeavePage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -32,7 +34,7 @@ function App() {
       component: DashboardPage,
       isPrivate: true,
     },
-    
+
     {
       path: "/forgot-password",
       component: ForgetPasswordPage,
@@ -73,19 +75,30 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="profile" element={<ProfilePage/>} />
-          <Route path="user/dashboard" element={<UserManagementPage/>} />
-          <Route path="user/create" element={<CreateUser/>}/>
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="user/dashboard" element={<UserManagementPage />} />
+          <Route path="user/create" element={<CreateUser />} />
           {/* organization */}
-          <Route path="organization/department" element={<DepartmentPage/>}/>
-          <Route path="organization/shift" element={<ShiftPage/>}/>
-          <Route path="organization/shift/details" element={<ShiftDetailPage/>}/>
-          <Route path="organization/shift/create" element={<ShiftCreatePage/>}/>
-          <Route path="organization/shift/edit" element={<ShiftEditPage/>}/>
+          <Route path="organization/department" element={<DepartmentPage />} />
+          <Route path="organization/shift" element={<ShiftPage />} />
+          <Route
+            path="organization/shift/details"
+            element={<ShiftDetailPage />}
+          />
+          <Route
+            path="organization/shift/create"
+            element={<ShiftCreatePage />}
+          />
+          <Route path="organization/shift/edit" element={<ShiftEditPage />} />
+
+          <Route path="organization/leave" element={<LeavePage />} />
+          <Route path="organization/leave/create" element={<CreateLeavePage />} />
+          <Route path="organization/leave/edit" element={<CreateLeavePage />} />
+          
           {/* staff */}
-          <Route path="staff/dashboard" element={<StaffDashboardPage/>}/>
-          <Route path="staff/onboard" element={<StaffOnboardPage/>}/>
-          <Route path="staff/profile" element={<StaffProfilePage/>}/>
+          <Route path="staff/dashboard" element={<StaffDashboardPage />} />
+          <Route path="staff/onboard" element={<StaffOnboardPage />} />
+          <Route path="staff/profile" element={<StaffProfilePage />} />
         </Route>
       </Routes>
     </>
