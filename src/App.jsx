@@ -22,6 +22,7 @@ import CreateLeavePage from "./pages/organization/leave/CreateLeavePage";
 import RolePage from "./pages/user/RolePage";
 import RoleDetailsPage from "./pages/user/RoleDetailsPage";
 import CreateRole from "./pages/user/CreateRole";
+import HolidayPage from "./pages/organization/holiday/HolidayPage";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -102,12 +103,14 @@ function App() {
           <Route path="organization/leave" element={<LeavePage />} />
           <Route path="organization/leave/create" element={<CreateLeavePage />} />
           <Route path="organization/leave/edit" element={<CreateLeavePage />} />
+
+          <Route path="organization/holiday" element={<HolidayPage />} /> 
           
           {/* staff */}
           <Route path="staff/dashboard" element={<StaffDashboardPage />} />
           <Route path="staff/onboard" element={<StaffOnboardPage />} />
           <Route path="staff/profile" element={<StaffProfilePage />} />
-        </Route>
+        </Route>  
       </Routes>
     </>
   );
