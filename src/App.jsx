@@ -19,6 +19,9 @@ import ShiftCreatePage from "./pages/organization/shift/ShiftCreatePage";
 import ShiftEditPage from "./pages/organization/shift/ShiftEditPage";
 import LeavePage from "./pages/organization/leave/LeavePage";
 import CreateLeavePage from "./pages/organization/leave/CreateLeavePage";
+import RolePage from "./pages/user/RolePage";
+import RoleDetailsPage from "./pages/user/RoleDetailsPage";
+import CreateRole from "./pages/user/CreateRole";
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -74,10 +77,15 @@ function App() {
               <DashboardPage />
             </ProtectedRoute>
           }
-        >
+        > 
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="users/roles" element={<RolePage />} />
+          <Route path="user/roles/detail" element={<RoleDetailsPage/>}/>
+          <Route path="user/roles/create" element={<CreateRole/>}/>
           <Route path="user/dashboard" element={<UserManagementPage />} />
           <Route path="user/create" element={<CreateUser />} />
+
+
           {/* organization */}
           <Route path="organization/department" element={<DepartmentPage />} />
           <Route path="organization/shift" element={<ShiftPage />} />
