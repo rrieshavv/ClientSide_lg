@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../../dashboard/components/CustomUI";
+import { NepaliDatePicker } from "nepali-datepicker-reactjs";
 
 const CreateHoliday = ({
   isOpen,
@@ -21,7 +22,7 @@ const CreateHoliday = ({
   }, [currentFY]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target ? e.target : e;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -52,7 +53,7 @@ const CreateHoliday = ({
 
     setFormData({
       title: "",
-      fiscal_year: currentFY || "", 
+      fiscal_year: currentFY || "",
       eng_date: "",
       nep_date: "",
     });
@@ -103,13 +104,22 @@ const CreateHoliday = ({
             <label htmlFor="nep_date" className="block text-sm font-medium">
               मिति (Nepali Date)
             </label>
-            <input
+            {/* <input
               type="date"
               id="nep_date"
               name="nep_date"
               value={formData.nep_date}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md mt-2"
+            /> */}
+            <NepaliDatePicker
+              inputClassName="form-control w-full p-2 border border-gray-300 rounded-md mt-2"
+              options={{ calenderLocale: "en", valueLocale: "en" }}
+              className=""
+              value={formData.nep_date}
+              onChange={(value) => handleChange({ name: "nep_date", value })}
+              name="nep_date"
+              id="nep_date"
             />
           </div>
 

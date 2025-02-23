@@ -1,4 +1,5 @@
 import "./App.css";
+import "nepali-datepicker-reactjs/dist/index.css"
 import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./providers/ProtectedRoute";
 import { getToken } from "./providers/CookieHandler";
