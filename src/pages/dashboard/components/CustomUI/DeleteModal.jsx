@@ -8,7 +8,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, department }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-semibold">Confirm Deletion</h2>
         <p className="mt-2 text-gray-600">
-          Are you sure you want to delete <strong>{department?.name}</strong>?
+          Are you sure you want to delete <strong>{department?.name ?? department?.title}</strong>?
         </p>
         <div className="mt-4 flex justify-end gap-3">
           <button
